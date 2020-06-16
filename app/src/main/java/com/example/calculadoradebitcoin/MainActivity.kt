@@ -3,6 +3,8 @@ package com.example.calculadoradebitcoin
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.bloco_cotacao.*
+import kotlinx.android.synthetic.main.bloco_entrada.*
+import kotlinx.android.synthetic.main.bloco_saida.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.json.JSONObject
@@ -20,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         buscarCotacao()
+
+        btn_calcular.setOnClickListener {
+            calcular()
+        }
     }
 
     fun buscarCotacao() {
@@ -40,5 +46,21 @@ class MainActivity : AppCompatActivity() {
                 txt_cotacao.text = cotacaoFormatada
             }
         }
+    }
+
+    fun calcular(){
+
+        if(txt_valor.text.isEmpty()){
+            txt_valor.error = "Preencha um valor"
+            return
+        }
+        val valor_digitado = txt_valor.text.toString()
+            .replace(",", ".")
+            .toDouble()
+
+        val resultado = if (cotacaoBitcoin > 0 )valor_digitado / cotacaoBitcoin else 0.0
+
+        //atualizando a textview com o resultado formatado com 8 casas decimais
+        txt_qtd_bitcoins.text = "%.8f".format(resultado)
     }
 }
